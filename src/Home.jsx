@@ -1,23 +1,22 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-
-
+import { PostsIndex } from "./PostsIndex.jsx";
 
 export function Home() {
-  const [recipes, setRecipes] = useState([]);
+  const title = "PizzaDream";
 
-  const handleIndex = () => {
-    console.log("handleIndex");
-    axios.get("https://pizzablog-api.onrender.com/recipes.json").then((response) => {
-      console.log(response.data);
-      setRecipes(response.data);
-    });
-  };
-
-  useEffect(handleIndex, []);
   return (
-    <main>
-      <h1>PizzaDreams Recipes</h1>
-    </main>
-  )
+    <div>
+      <h1 className="text-4xl text-center p-6 animate-fade-in">
+        {title.split("").map((char, index) => (
+          <span
+            key={index}
+            className="inline-block animate-bounce-once"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            {char}
+          </span>
+        ))}
+      </h1>
+      <PostsIndex />
+    </div>
+  );
 }

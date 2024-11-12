@@ -29,21 +29,38 @@ export function Login() {
   };
 
   return (
-    <div id="login">
-      <h1>Login</h1>
-      <ul>
+    <div id="login" className="p-4">
+      <h1 className="text-2xl font-medium mt-6 mb-5 ml-10">Login</h1>
+      <ul className="text-red-500">
         {errors.map((error) => (
           <li key={error}>{error}</li>
         ))}
       </ul>
-      <form onSubmit={handleSubmit}>
-        <div>
-          Email: <input name="email" type="email" />
+      <form onSubmit={handleSubmit} className="ml-10">
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Email:</label>
+          <input
+            name="email"
+            type="email"
+            className="border border-gray-300 p-2 w-full rounded"
+          />
         </div>
-        <div>
-          Password: <input name="password" type="password" />
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Password:</label>
+          <input
+            name="password"
+            type="password"
+            className="border border-gray-300 p-2 w-full rounded"
+          />
         </div>
-        <button type="submit">Login</button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-black text-white p-2 rounded hover:bg-violet-600"
+          >
+          Login
+          </button>
+        </div>
       </form>
     </div>
   );
