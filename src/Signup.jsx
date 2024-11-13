@@ -47,6 +47,14 @@ export function Signup() {
           />
         </div>
         <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Username:</label>
+          <input
+            name="username"
+            type="text"
+            className="border border-gray-300 p-2 w-full rounded"
+          />
+        </div>
+        <div className="mb-4">
           <label className="block text-sm font-medium mb-2">Password:</label>
           <input
             name="password"

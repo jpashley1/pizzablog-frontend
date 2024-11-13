@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";  // Import Link from react-router-dom
 
 export function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
+  const title = "Recipes";
 
   const handleIndex = () => {
     console.log("handleIndex");
@@ -17,7 +18,17 @@ export function RecipesPage() {
 
   return (
     <div id="RecipesIndex" className="p-4">
-      <h1 className="text-center text-4xl mb-6">All Recipes</h1>
+      <h1 className="text-5xl text-center p-6 animate-fade-in">
+        {title.split("").map((char, index) => (
+          <span
+            key={index}
+            className="inline-block animate-bounce-once"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            {char}
+          </span>
+        ))}
+      </h1>
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-3">
           {recipes.map((recipe) => (
             <Link
@@ -37,6 +48,7 @@ export function RecipesPage() {
               <p className="text-gray-700">
                 <strong>Directions:</strong> {recipe.directions}
               </p>
+             
             </Link>
           ))}
         </div>

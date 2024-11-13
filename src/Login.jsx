@@ -6,7 +6,7 @@ if (jwt) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
 }
 
-export function Login() {
+export function Login({ setIsLoggedIn }) {
   const [errors, setErrors] = useState([]);
 
   const handleSubmit = (event) => {
@@ -19,6 +19,7 @@ export function Login() {
         console.log(response.data);
         axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
         localStorage.setItem("jwt", response.data.jwt);
+        setIsLoggedIn(true);
         event.target.reset();
         window.location.href = "/"; // Change this to hide a modal, redirect to a specific page, etc.
       })
