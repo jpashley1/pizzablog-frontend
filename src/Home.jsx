@@ -5,7 +5,7 @@ export function Home() {
 
   return (
     <div>
-      <h1 className="text-6xl text-center p-6 animate-fade-in">
+      <h1 className="text-5xl text-center p-10 animate-fade-in">
         {title.split("").map((char, index) => (
           <span
             key={index}

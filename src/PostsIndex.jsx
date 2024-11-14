@@ -31,9 +31,13 @@ export function PostsIndex() {
                 className="w-full h-48 object-cover rounded-md mb-4"
               />
             </Link>
+            
+            < Link to={`/users/${post.user_id}`}>
             <p className="text-left text-sm font-semibold text-gray-600 mb-2">
               Posted by {post.username}
             </p>
+            </Link>
+          
             <h2 className="text-left text-xl mb-2">
               {post.caption}
             </h2>

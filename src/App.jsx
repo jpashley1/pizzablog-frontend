@@ -7,8 +7,10 @@ import { Login } from "./Login";
 import { Footer } from "./Footer";
 import { RecipesPage } from "./RecipesPage";
 import { RecipesShow } from "./RecipesShow";
+import { RecipeBox } from "./RecipeBox";
 import { PostsShow } from "./PostsShow";
 import { ProfilePage } from "./ProfilePage";
+import { UserShow } from "./UserShow";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -39,7 +41,9 @@ function App() {
         { path: "/login", element: <Login setIsLoggedIn={setIsLoggedIn} /> },
         { path: "/recipes", element: <RecipesPage /> },
         { path: "/recipes/:id", element: <RecipesShow /> },
+        { path: "/recipe_box", element: <RecipeBox /> },
         { path: "/posts/:id", element: <PostsShow /> },
+        { path: "/users/:id", element: <UserShow /> },
         { path: "/profile", element: <ProfilePage setIsLoggedIn={setIsLoggedIn} /> },
       ],
     },
