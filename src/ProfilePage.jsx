@@ -25,13 +25,16 @@ export function ProfilePage({ setIsLoggedIn }) {
 
   const handleUserPostsData = () => {
     axios.get("http://localhost:3000/my_posts.json").then((response) => {
-      setUserPosts(response.data);
+      // setUserPosts(response.data);
+      const sortedPosts = response.data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+      setUserPosts(sortedPosts);
     });
   };
 
   const handleUserRecipesData = () => {
     axios.get("http://localhost:3000/my_recipes.json").then((response) => {
-      setUserRecipes(response.data);
+      const sortedRecipes = response.data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+      setUserRecipes(sortedRecipes);
     });
   };
 
@@ -64,7 +67,7 @@ export function ProfilePage({ setIsLoggedIn }) {
   }
 
   return (
-    <div id="ProfilePage" className="p-6 relative">
+    <div id="ProfilePage" className="p-2 relative">
       {/* Logout Button */}
       <button
         onClick={handleLogout}
@@ -154,18 +157,18 @@ export function ProfilePage({ setIsLoggedIn }) {
       </div>
 
       <div id="ContentIndex">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 mt-4">
+        <div className="grid grid-cols-2 gap-1 lg:grid-cols-3 mt-4">
           {showRecipes
             ? recipes.map((recipe) => (
                 <div
                   key={recipe.id}
-                  className="w-full h-80 border p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow mx-auto"
+                  className="w-full h-80 border p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
                 >
                   <Link to={`/recipes/${recipe.id}`}>
                     <img
                       src={`http://localhost:3000${recipe.image_url}`}
                       alt={`${recipe.title} image`}
-                      className="w-full h-48 object-cover rounded-md mb-4"
+                      className="w-full h-56 object-cover rounded-md mb-4"
                     />
                   </Link>
                   <p className="text-left text-sm font-semibold text-gray-600 mb-2">
@@ -179,7 +182,7 @@ export function ProfilePage({ setIsLoggedIn }) {
             : posts.map((post) => (
                 <div
                   key={post.id}
-                  className="w-full h-80 border p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow mx-auto"
+                  className="max-w-xs mx-auto border p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
                 >
                   <Link to={`/posts/${post.id}`}>
                     <img

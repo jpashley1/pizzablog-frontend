@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export function Header({ isLoggedIn }) {
   return (
     <header className="bg-orange-100 text-center text-xl py-2">
-      <nav className="flex justify-center items-center max-w-5xl mx-auto px-8">
+      <nav className="flex justify-center items-center max-w-5xl mx-auto">
         {/* Centered Icons and Buttons (when logged out) */}
         <div className="flex justify-center space-x-16 w-full">
           <Link className="hover:bg-orange-50 p-2 rounded-full flex items-center" to="/">
@@ -47,7 +47,7 @@ export function Header({ isLoggedIn }) {
             </>
           ) : (
             <>
-              <Link className="hover:bg-orange-50 font-semibold p-2 rounded-lg flex items-center" to="/signup">
+              <Link className="hover:bg-orange-50 font-semibold p-1 rounded flex items-center" to="/signup">
                 Signup
               </Link>
               <Link className="hover:bg-orange-50 p-2 rounded-lg flex items-center" to="/login">

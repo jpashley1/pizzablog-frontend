@@ -7,10 +7,12 @@ export function PostsIndex() {
   const [posts, setPosts] = useState([]);
 
   const handleIndex = () => {
-    console.log("handlePostIndex");
+    console.log("handleIndex");
     axios.get("http://localhost:3000/posts.json").then((response) => {
       console.log(response.data);
-      setPosts(response.data);
+     
+      const sortePosts = response.data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+      setPosts(sortePosts);
     });
   };
 
@@ -28,10 +30,10 @@ export function PostsIndex() {
               <img
                 src={`http://localhost:3000${post.image_url}`}
                 alt={`${post.caption} image`}
-                className="w-full h-48 object-cover rounded-md mb-4"
+                className="w-full h-60 object-cover rounded-md mb-4"
               />
             </Link>
-            
+
             < Link to={`/users/${post.user_id}`}>
             <p className="text-left text-sm font-semibold text-gray-600 mb-2">
               Posted by {post.username}
