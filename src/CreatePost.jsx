@@ -4,9 +4,22 @@ import axios from "axios";
 export function CreatePost({ onClose }) {
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleImageChange = (event) => {
-    setImage(event.target.files[0]); 
+    const file = event.target.files[0];
+    setImage(file);
+
+    // Generate a preview URL for the selected image
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result); // Set preview URL
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null); // Clear preview if no file is selected
+    }
   };
 
   const handleFormSubmit = (event) => {
@@ -14,17 +27,17 @@ export function CreatePost({ onClose }) {
 
     const formData = new FormData();
     formData.append("caption", caption);
-    formData.append("image", image); // Append the image file 
+    formData.append("image", image); // Append the image file
 
-  
-    axios.post("http://localhost:3000/posts.json", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
+    axios
+      .post("http://localhost:3000/posts.json", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((response) => {
         console.log("Post created:", response.data);
-        onClose(); 
+        onClose();
       })
       .catch((error) => {
         console.error("Error creating post:", error);
@@ -55,6 +68,16 @@ export function CreatePost({ onClose }) {
               accept="image/*"
               required
             />
+            {/* Image Preview */}
+            {imagePreview && (
+              <div className="mt-4">
+                <img
+                  src={imagePreview}
+                  alt="Selected"
+                  className="w-full h-40 object-cover rounded-md border"
+                />
+              </div>
+            )}
           </div>
           <div className="flex justify-end space-x-2">
             <button

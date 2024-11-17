@@ -11,15 +11,21 @@ import { RecipeBox } from "./RecipeBox";
 import { PostsShow } from "./PostsShow";
 import { ProfilePage } from "./ProfilePage";
 import { UserShow } from "./UserShow";
+import { RecipeBoxShow } from "./RecipeBoxShow";
+import { ResultsPage } from "./ResultsPage";
+import { isTokenValid } from "./auth";
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Check if a JWT exists in localStorage on component mount
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
-    if (jwt) {
+    if (jwt && isTokenValid(jwt)) {
       setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false); // Logout if the token is invalid or expired
+      localStorage.removeItem("jwt"); // Optional: clear invalid token
     }
   }, []);
 
@@ -39,9 +45,11 @@ function App() {
         { path: "/", element: <Home /> },
         { path: "/signup", element: <Signup /> },
         { path: "/login", element: <Login setIsLoggedIn={setIsLoggedIn} /> },
+        { path: "/results", element: <ResultsPage /> },
         { path: "/recipes", element: <RecipesPage /> },
         { path: "/recipes/:id", element: <RecipesShow /> },
         { path: "/recipe_box", element: <RecipeBox /> },
+        { path: "/recipe_box/:id", element: <RecipeBoxShow /> },
         { path: "/posts/:id", element: <PostsShow /> },
         { path: "/users/:id", element: <UserShow /> },
         { path: "/profile", element: <ProfilePage setIsLoggedIn={setIsLoggedIn} /> },

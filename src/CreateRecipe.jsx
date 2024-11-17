@@ -6,9 +6,23 @@ export function CreateRecipe({ onClose }) {
   const [ingredients, setIngredients] = useState(null);
   const [directions, setDirections] = useState(null);
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
 
   const handleImageChange = (event) => {
-    setImage(event.target.files[0]); 
+    const file = event.target.files[0];
+    setImage(file);
+
+    // Generate a preview URL for the selected image
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result); // Set preview URL
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null); // Clear preview if no file is selected
+    }
   };
 
   const handleFormSubmit = (event) => {
@@ -79,6 +93,16 @@ export function CreateRecipe({ onClose }) {
               accept="image/*"
               required
             />
+            {/* Image Preview */}
+            {imagePreview && (
+              <div className="mt-4">
+                <img
+                  src={imagePreview}
+                  alt="Selected"
+                  className="w-full h-40 object-cover rounded-md border"
+                />
+              </div>
+            )}
           </div>
           <div className="flex justify-end space-x-2">
             <button

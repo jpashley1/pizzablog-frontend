@@ -4,7 +4,7 @@ export function Home() {
   const title = "PizzaDream";
 
   return (
-    <div>
+    <div className="py-12">
       <h1 className="text-5xl text-center p-10 animate-fade-in">
         {title.split("").map((char, index) => (
           <span

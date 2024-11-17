@@ -11,15 +11,15 @@ export function PostsIndex() {
     axios.get("http://localhost:3000/posts.json").then((response) => {
       console.log(response.data);
      
-      const sortePosts = response.data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-      setPosts(sortePosts);
+      const sortedPosts = response.data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+      setPosts(sortedPosts);
     });
   };
 
   useEffect(handleIndex, []);
 
   return (
-    <div id="PostsIndex" className="p-6">
+    <div id="PostsIndex">
       <div>
         {posts.map((post) => (
           <div

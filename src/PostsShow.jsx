@@ -5,6 +5,7 @@ import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { EditPost } from "./EditPost";
+import { CreatePostComment } from "./CreatePostComment";
 
 export function PostsShow() {
   const { id } = useParams();
@@ -15,20 +16,28 @@ export function PostsShow() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [comments, setComments] = useState([]);
+
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+
+  const handleNewCommentClick = () => {
+    setIsCommentModalOpen(true);
+  };
 
   useEffect(() => {
-    // Fetch post data
+    // get post data
     axios
       .get(`http://localhost:3000/posts/${id}.json`)
       .then((response) => {
         console.log("Post data:", response.data);
         setPost(response.data);
+        setComments(response.data.comments || []);
       })
       .catch((error) => {
         setError(error.message);
       });
 
-    // Fetch current user data separately
+    // get the current user data 
     axios
       .get("http://localhost:3000/my_profile.json")
       .then((response) => {
@@ -83,7 +92,7 @@ export function PostsShow() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
+    <div className="py-20 max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
     
 
     <div className="relative">
@@ -99,7 +108,7 @@ export function PostsShow() {
     <>
       <ArrowDropDownCircleIcon
         onClick={handleOpenMenu}
-        className="absolute top-2 right-2 cursor-pointer text-gray-500 hover:text-gray-800"
+        className="absolute top-2 right-2 cursor-pointer text-slate-200 hover:text-gray-800"
         fontSize="large"
       />
       <Menu
@@ -151,6 +160,34 @@ export function PostsShow() {
       <div className="mb-6">
         <p className="text-gray-600">{post.caption}</p>
       </div>
+      <button 
+      className="bg-blue-700 text-white p-1 mt-4 text-sm rounded-md"
+      onClick={handleNewCommentClick}
+      > + Comment </button>
+      
+      {isCommentModalOpen && <CreatePostComment onClose={() => setIsCommentModalOpen(false)} />}
+
+      <div className="mt-4">
+        <h3 className="text-lg font-bold mb-2">Comments</h3>
+        {comments.length > 0 ? (
+          <div className="flex space-y-4">
+            {comments.map((comment) => (
+              <div key={comment?.id} className="bg-gray-50 p-4 rounded-lg">
+                <Link to={`/users/${comment.user_id}`}>
+                <p className="font-medium text-blue-700">{comment?.username || 'Anonymous'}</p>
+                <p>{comment?.content}</p>
+                </Link>
+                <p className="text-xs text-gray-500">
+                  {comment?.created_at ? new Date(comment.created_at).toLocaleDateString() : ''}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No comments yet.</p>
+        )}
+      </div>
     </div>
+    
   );
 }

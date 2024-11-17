@@ -1,45 +1,59 @@
 import { useState } from "react";
 import axios from "axios";
 
-export function EditProfile({ id, username: initialUsername, bio: initialBio, onClose }) {
+export function EditProfile({ id, username: initialUsername, bio: initialBio, profile_pic: initialProfilePic, onClose }) {
   const [username, setUsername] = useState(initialUsername || "");
   const [bio, setBio] = useState(initialBio || "");
-  const [profile_pic, setProfilePic] = useState(null);
+  const [profile_pic, setProfilePic] = useState(initialProfilePic);
   const [error, setError] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleProfilePicChange = (event) => {
-    setProfilePic(event.target.files[0]); 
+    const file = event.target.files[0];
+    setProfilePic(file);
+
+    // Generate a preview URL for the selected image
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result); // Set preview URL
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null); // Clear preview if no file is selected
+    }
   };
 
   const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    setError("");
+  event.preventDefault();
+  setError("");
 
-    
-    const formData = new FormData();
-    formData.append("username", username);
-    formData.append("bio", bio);
-    if (profile_pic) {
-      formData.append("profile_pic", profile_pic); // Attach the file to formData
-    }
+  const formData = new FormData();
+  formData.append("username", username);
+  formData.append("bio", bio);
 
-    try {
-      const response = await axios.patch(
-        `http://localhost:3000/users/${id}.json`,
-        formData, // Send formData
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Set the correct content type
-          },
-        }
-      );
-      console.log("Profile updated:", response.data);
-      onClose();
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      setError(error.response?.data?.errors || "An error occurred while updating the profile");
-    }
-  };
+  // Only append `profile_pic` if it's a File object
+  if (profile_pic && !(typeof profile_pic === "string")) {
+    formData.append("profile_pic", profile_pic); 
+  }
+
+  try {
+    const response = await axios.patch(
+      `http://localhost:3000/users/${id}.json`,
+      formData, // Send formData
+      {
+        headers: {
+          "Content-Type": "multipart/form-data", // Set the correct content type
+        },
+      }
+    );
+    console.log("Profile updated:", response.data);
+    onClose();
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    setError(error.response?.data?.errors || "An error occurred while updating the profile");
+  }
+};
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -70,13 +84,30 @@ export function EditProfile({ id, username: initialUsername, bio: initialBio, on
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Profile Picture</label>
+            <label className="block text-sm font-medium mb-1">Profile Pic</label>
+            {profile_pic && typeof profile_pic === "string" && (
+              <img
+                src={`http://localhost:3000${profile_pic}`}
+                alt="Post"
+                className="w-full h-48 mb-2 rounded-md shadow-sm object-cover"
+              />
+            )}
             <input
               type="file"
               onChange={handleProfilePicChange}
               className="border border-gray-300 p-2 w-full rounded"
               accept="image/*"
             />
+            {/* Image Preview */}
+            {imagePreview && (
+              <div className="mt-4">
+                <img
+                  src={imagePreview}
+                  alt="Selected"
+                  className="w-full h-40 object-cover rounded-md border"
+                />
+              </div>
+            )}
           </div>
           <div className="flex justify-end space-x-2">
             <button

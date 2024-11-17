@@ -43,10 +43,10 @@ export function UserShow() {
   }
 
   return (
-    <div id="ProfilePage" className="p-6 relative">
+    <div id="ProfilePage" className="p-6 py-24 relative">
 
       <div className="flex items-start mb-6">
-        <div className="p-2 bg-white rounded-full shadow-lg border border-red-600 border-y-4">
+        <div className="p- bg-white rounded-full shadow-lg border border-red-600 border-y-4">
           <div className="w-36 h-36 rounded-full overflow-hidden">
             <img
               src={`http://localhost:3000${user.profile_pic_url}`}
@@ -82,12 +82,12 @@ export function UserShow() {
       </div>
 
       <div id="ContentIndex">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-1 mt-1">
           {showRecipes
             ? recipes.map((recipe) => (
                 <div
                   key={recipe.id}
-                  className="w-full h-80 border p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow mx-auto"
+                  className="w-full h-80 border p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow mx-auto"
                 >
                   <Link to={`/recipes/${recipe.id}`}>
                     <img

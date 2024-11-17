@@ -18,13 +18,8 @@ export function RecipesPage() {
 
   useEffect(handleIndex, []);
 
-  // const handleBookmark = (e, recipeId) => {
-  //   e.preventDefault(); 
-  //   console.log("Bookmarked recipe:", recipeId);
-  // };
-
   return (
-    <div id="RecipesIndex" className="p-4">
+    <div id="RecipesIndex" className="p-1 py-16">
       <h1 className="text-5xl text-center p-6 animate-fade-in">
         {title.split("").map((char, index) => (
           <span
@@ -36,12 +31,12 @@ export function RecipesPage() {
           </span>
         ))}
       </h1>
-      <div className="grid grid-cols-2 gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-1 lg:grid-cols-3">
         {recipes.map((recipe) => (
           <Link
             to={`/recipes/${recipe.id}`}
             key={recipe.id}
-            className="max-w-xs mx-auto border p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="max-w-xs mx-auto border p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow"
           >
             <div className="relative">
               <img
@@ -49,18 +44,13 @@ export function RecipesPage() {
                 alt={`${recipe.title} image`}
                 className="w-full h-48 object-cover rounded-md mb-4"
               />
-              {/* <button
-                onClick={(e) => handleBookmark(e, recipe.id)}
-                className="absolute bottom-2 right-2 bg-white p-1 rounded-full shadow-md hover:bg-gray-100 transition-colors"
-              >
-                <BookmarkAddIcon className="text-gray-600 hover:text-gray-800" />
-              </button> */}
+              
             </div>
             <h2 className="text-center text-xl font-semibold mb-2">{recipe.title}</h2>
-            <p className="text-gray-700 mb-2">
+            <p className="text-gray-700 text-sm mb-2">
               <strong>Ingredients:</strong> {recipe.ingredients}
             </p>
-            <p className="text-gray-700">
+            <p className="text-gray-700 text-sm">
               <strong>Directions:</strong> {recipe.directions}
             </p>
           </Link>

@@ -30,7 +30,7 @@ export function Login({ setIsLoggedIn }) {
   };
 
   return (
-    <div id="login" className="p-4">
+    <div id="login" className="p-4 py-14">
       <h1 className="text-2xl font-medium mt-6 mb-5 ml-10">Login</h1>
       <ul className="text-red-500">
         {errors.map((error) => (

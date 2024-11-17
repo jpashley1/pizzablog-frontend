@@ -22,7 +22,7 @@ export function Signup() {
   };
 
   return (
-    <div id="signup" className="p-4">
+    <div id="signup" className="p-4 py-20">
       <h1 className="text-2xl font-medium mt-2 mb-4 ml-10">Signup</h1>
       <ul className="text-red-500">
         {errors.map((error) => (
