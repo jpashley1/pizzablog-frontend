@@ -53,17 +53,20 @@ export function PostsShow() {
       .catch((error) => {
         setError(error.message);
       });
-
-    // get the current user data 
-    axios
-      .get("http://localhost:3000/my_profile.json")
-      .then((response) => {
-        console.log("Current user data:", response.data);
-        setCurrentUser(response.data);
-      })
-      .catch((error) => {
-        console.log("Error fetching current user:", error);
-      });
+  
+    // only fetch current user if logged in
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      axios
+        .get("http://localhost:3000/my_profile.json")
+        .then((response) => {
+          console.log("Current user data:", response.data);
+          setCurrentUser(response.data);
+        })
+        .catch((error) => {
+          console.log("Error fetching current user:", error);
+        });
+    }
   }, [id]);
 
   const handleEdit = () => {
@@ -103,7 +106,7 @@ export function PostsShow() {
     );
   }
 
-  if (!post || !currentUser) {
+  if (!post) {
     return <div className="p-4 text-center text-gray-600">Loading...</div>;
   }
 
@@ -118,7 +121,7 @@ export function PostsShow() {
           />
         )}
 
-        {currentUser.username === post.username && (
+        {currentUser && currentUser.username === post.username && (
           <>
             <ArrowDropDownCircleIcon
               onClick={handleOpenMenu}
@@ -174,6 +177,15 @@ export function PostsShow() {
       <div className="mb-6">
         <p className="text-gray-600">{post.caption}</p>
       </div>
+      {currentUser && currentUser.username === post.username && (
+      <>
+        <ArrowDropDownCircleIcon
+          onClick={handleOpenMenu}
+          className="absolute top-2 right-2 cursor-pointer text-slate-200 hover:text-gray-800"
+          fontSize="large"
+        />
+      </>
+      )}
       <button 
         className="bg-blue-700 text-white p-1 mt-4 text-sm rounded-md"
         onClick={handleNewCommentClick}
