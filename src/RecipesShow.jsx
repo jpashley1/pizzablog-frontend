@@ -66,41 +66,41 @@ export function RecipesShow() {
   };
 
   useEffect(() => {
+    // Fetch recipe first
     axios
       .get(`http://localhost:3000/recipes/${id}.json`)
       .then((response) => {
-        console.log("Recipe data:", response.data);
         setRecipe(response.data);
         setComments(response.data.comments || []);
-        console.log("Comments data:", response.data.comments); 
-
-
       })
       .catch((error) => {
         setError(error.message);
       });
-
-    axios
-      .get("http://localhost:3000/my_profile.json")
-      .then((response) => {
-        console.log("Current user data:", response.data);
-        setCurrentUser(response.data);
-      })
-      .catch((error) => {
-        console.log("Error fetching current user:", error);
-      });
-
-    axios
-      .get("http://localhost:3000/recipe_box.json")
-      .then((response) => {
-        const isInRecipeBox = response.data.some(
-          (item) => item.recipe_id === parseInt(id)
-        );
-        setIsBookmarked(isInRecipeBox);
-      })
-      .catch((error) => {
-        console.log("Error checking recipe box:", error);
-      });
+  
+    // Fetch user profile and recipe box separately
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      axios
+        .get("http://localhost:3000/my_profile.json")
+        .then((response) => {
+          setCurrentUser(response.data);
+        })
+        .catch((error) => {
+          console.log("Error fetching user profile:", error);
+        });
+  
+      axios
+        .get("http://localhost:3000/recipe_box.json")
+        .then((response) => {
+          const isInRecipeBox = response.data.some(
+            (item) => item.recipe_id === parseInt(id)
+          );
+          setIsBookmarked(isInRecipeBox);
+        })
+        .catch((error) => {
+          console.log("Error checking recipe box:", error);
+        });
+    }
   }, [id]);
 
   const handleEdit = () => {
@@ -162,7 +162,7 @@ export function RecipesShow() {
     );
   }
 
-  if (!recipe || !currentUser) {
+  if (!recipe) {
     return <div className="p-4 text-center text-gray-600">Loading...</div>;
   }
 
@@ -181,7 +181,7 @@ export function RecipesShow() {
           />
         )}
         
-        {currentUser.username === recipe.username && (
+        {currentUser && currentUser.username === recipe.username && (
           <>
             <ArrowDropDownCircleIcon
               onClick={handleOpenMenu}
@@ -299,7 +299,7 @@ export function RecipesShow() {
                   <p className="text-sm text-gray-500">
                     {new Date(comment.created_at).toLocaleDateString()}
                   </p>
-                  {currentUser.username === comment.username && (
+                  {currentUser && currentUser.username === recipe.username &&  (
                     <div className="absolute top-2 right-2 flex space-x-2">
                       <button 
                         onClick={() => handleEditComment(comment)}
