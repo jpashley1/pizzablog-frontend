@@ -7,6 +7,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { EditRecipe } from "./EditRecipe";
 import { CreateRecipeComent } from "./CreateRecipeComment";
+import { EditRecipeComment } from "./EditRecipeComment";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -275,14 +276,18 @@ export function RecipesShow() {
       </button>
       {/* Ensure that the modal opens correctly when isCommentModalOpen is true */}
       {isCommentModalOpen && (
-        <CreateRecipeComent 
-          onClose={handleCloseCommentModal} // Pass close function to modal
-          onCommentSubmit={handleCommentSubmit}
-          commentToEdit={editingCommentId 
-            ? comments.find(comment => comment.id === editingCommentId) 
-            : null
-          }
-        />
+        editingCommentId ? (
+          <EditRecipeComment
+            onClose={handleCloseCommentModal}
+            onCommentSubmit={handleCommentSubmit}
+            commentToEdit={comments.find(comment => comment.id === editingCommentId)}
+          />
+        ) : (
+          <CreateRecipeComent 
+            onClose={handleCloseCommentModal}
+            onCommentSubmit={handleCommentSubmit}
+          />
+        )
       )}
       <div className="mt-4">
         <h3 className="text-lg font-bold mb-2">Comments</h3>
@@ -299,7 +304,7 @@ export function RecipesShow() {
                   <p className="text-sm text-gray-500">
                     {new Date(comment.created_at).toLocaleDateString()}
                   </p>
-                  {currentUser && currentUser.username === recipe.username &&  (
+                  {currentUser && currentUser.username === comment.username && (
                     <div className="absolute top-2 right-2 flex space-x-2">
                       <button 
                         onClick={() => handleEditComment(comment)}
