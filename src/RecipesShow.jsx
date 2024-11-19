@@ -1,12 +1,13 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import axios from "axios";
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { EditRecipe } from "./EditRecipe";
-import { CreateRecipeComent } from "./CreateRecipeComment";
+import { CreateRecipeComment } from "./CreateRecipeComment";
 import { EditRecipeComment } from "./EditRecipeComment";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -275,20 +276,24 @@ export function RecipesShow() {
         + Comment
       </button>
       {/* Ensure that the modal opens correctly when isCommentModalOpen is true */}
-      {isCommentModalOpen && (
-        editingCommentId ? (
-          <EditRecipeComment
-            onClose={handleCloseCommentModal}
-            onCommentSubmit={handleCommentSubmit}
-            commentToEdit={comments.find(comment => comment.id === editingCommentId)}
-          />
-        ) : (
-          <CreateRecipeComent 
-            onClose={handleCloseCommentModal}
-            onCommentSubmit={handleCommentSubmit}
-          />
-        )
-      )}
+      {isCommentModalOpen &&
+        ReactDOM.createPortal(
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            {editingCommentId ? (
+              <EditRecipeComment
+                onClose={handleCloseCommentModal}
+                onCommentSubmit={handleCommentSubmit}
+                commentToEdit={comments.find((comment) => comment.id === editingCommentId)}
+              />
+            ) : (
+              <CreateRecipeComment
+                onClose={handleCloseCommentModal}
+                onCommentSubmit={handleCommentSubmit}
+              />
+            )}
+          </div>,
+          document.body
+        )}
       <div className="mt-4">
         <h3 className="text-lg font-bold mb-2">Comments</h3>
         {comments.length > 0 ? (
