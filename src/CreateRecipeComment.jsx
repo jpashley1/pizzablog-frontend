@@ -2,9 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-export function CreatePostComment({ onClose, onCommentSubmit }) {
+export function CreateRecipeComent({ onClose, onCommentSubmit }) {
   const { id } = useParams();
-  const [comment, setcomment] = useState("");
+  const [comment, setComment] = useState("");
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -13,20 +13,20 @@ export function CreatePostComment({ onClose, onCommentSubmit }) {
     formData.append("comment", comment);
 
     axios
-      .post(`http://localhost:3000/posts/${id}/comments.json`, formData, {
+      .post(`http://localhost:3000/recipes/${id}/comments.json`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
-        console.log("comment created:", response.data);
+        console.log("Comment created:", response.data);
         if (onCommentSubmit) {
           onCommentSubmit(); // Notify parent to refresh comments
         }
-        onClose(); // Close modal after successful submission
+        onClose(); // Close the modal
       })
       .catch((error) => {
-        console.error("Error commenting:", error);
+        console.error("Error creating comment:", error);
       });
   };
 
@@ -40,16 +40,15 @@ export function CreatePostComment({ onClose, onCommentSubmit }) {
             <input
               type="text"
               value={comment}
-              onChange={(e) => setcomment(e.target.value)}
+              onChange={(e) => setComment(e.target.value)}
               className="border border-gray-300 p-2 w-full rounded"
               required
             />
           </div>
-          
           <div className="flex justify-end space-x-2">
             <button
               type="button"
-              onClick={onClose} // Make sure this closes the modal
+              onClick={onClose} // Close modal on cancel
               className="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
             >
               Cancel
@@ -66,4 +65,3 @@ export function CreatePostComment({ onClose, onCommentSubmit }) {
     </div>
   );
 }
-

@@ -6,6 +6,9 @@ import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { EditRecipe } from "./EditRecipe";
+import { CreateRecipeComent } from "./CreateRecipeComment";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export function RecipesShow() {
   const { id } = useParams();
@@ -19,7 +22,48 @@ export function RecipesShow() {
   const open = Boolean(anchorEl);
   const [showEditModal, setShowEditModal] = useState(false);
   const [comments, setComments] = useState([]);
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
 
+
+  const fetchComments = () => {
+    axios
+      .get(`http://localhost:3000/recipes/${id}.json`)
+      .then((response) => {
+        setComments(response.data.comments || []);
+      })
+      .catch((error) => console.error("Error fetching comments:", error));
+  };
+
+  const handleNewCommentClick = () => {
+    setIsCommentModalOpen(true); // Make sure the state is updated correctly
+  };
+
+  const handleCloseCommentModal = () => {
+    setIsCommentModalOpen(false); // Close the modal when needed
+  };
+
+  const handleCommentSubmit = () => {
+    fetchComments();
+    handleCloseCommentModal();
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (window.confirm("Are you sure you want to delete this comment?")) {
+      try {
+        await axios.delete(`http://localhost:3000/comments/${commentId}.json`);
+        fetchComments();
+      } catch (error) {
+        console.error("Error deleting comment:", error);
+        alert("Failed to delete comment");
+      }
+    }
+  };
+
+  const handleEditComment = (comment) => {
+    setEditingCommentId(comment.id);
+    setIsCommentModalOpen(true);
+  };
 
   useEffect(() => {
     axios
@@ -133,7 +177,7 @@ export function RecipesShow() {
           <img
             src={`http://localhost:3000${recipe.image_url}`}
             alt={`${recipe.title} image`}
-            className="w-full h-auto mb-4 rounded-md shadow-sm object-cover"
+            className="w-full h-80 mb-4 rounded-md shadow-sm object-cover"
           />
         )}
         
@@ -223,21 +267,56 @@ export function RecipesShow() {
         <p className="text-gray-600">{recipe.directions}</p>
       </div>
     
-      <button className="bg-blue-700 text-white p-1 mt-4 text-sm rounded-md"> + Comment </button>
-     
+      <button 
+        className="bg-blue-700 text-white p-1 mt-4 text-sm rounded-md"
+        onClick={handleNewCommentClick}
+      >
+        + Comment
+      </button>
+      {/* Ensure that the modal opens correctly when isCommentModalOpen is true */}
+      {isCommentModalOpen && (
+        <CreateRecipeComent 
+          onClose={handleCloseCommentModal} // Pass close function to modal
+          onCommentSubmit={handleCommentSubmit}
+          commentToEdit={editingCommentId 
+            ? comments.find(comment => comment.id === editingCommentId) 
+            : null
+          }
+        />
+      )}
       <div className="mt-4">
         <h3 className="text-lg font-bold mb-2">Comments</h3>
         {comments.length > 0 ? (
           <div className="space-y-4">
-            {comments.map((comment) => (
-              <div key={comment?.id} className="bg-gray-50 p-4 rounded-lg">
-                <p className="font-medium text-blue-700">{comment?.username || 'Anonymous'}</p>
-                <p>{comment?.content}</p>
-                <p className="text-sm text-gray-500">
-                  {comment?.created_at ? new Date(comment.created_at).toLocaleDateString() : ''}
-                </p>
-              </div>
-            ))}
+            {comments
+              .slice()
+              .map((comment) => (
+                <div key={comment.id} className="bg-gray-50 p-4 rounded-lg relative">
+                  <Link to={`/users/${comment.user_id}`}>
+                    <p className="font-medium text-blue-700">{comment.username || "Anonymous"}</p>
+                  </Link>
+                  <p>{comment.content}</p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(comment.created_at).toLocaleDateString()}
+                  </p>
+                  {currentUser.username === comment.username && (
+                    <div className="absolute top-2 right-2 flex space-x-2">
+                      <button 
+                        onClick={() => handleEditComment(comment)}
+                        className="text-blue-500 hover:text-blue-700"
+                      >
+                        <EditIcon fontSize="small" />
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
           </div>
         ) : (
           <p>No comments yet.</p>
