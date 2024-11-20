@@ -274,64 +274,64 @@ export function RecipesShow() {
         onClick={handleNewCommentClick}
       >
         + Comment
-      </button>
-      {/* Ensure that the modal opens correctly when isCommentModalOpen is true */}
-      {isCommentModalOpen &&
-        ReactDOM.createPortal(
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            {editingCommentId ? (
-              <EditRecipeComment
-                onClose={handleCloseCommentModal}
-                onCommentSubmit={handleCommentSubmit}
-                commentToEdit={comments.find((comment) => comment.id === editingCommentId)}
-              />
-            ) : (
-              <CreateRecipeComment
-                onClose={handleCloseCommentModal}
-                onCommentSubmit={handleCommentSubmit}
-              />
-            )}
-          </div>,
-          document.body
-        )}
-      <div className="mt-4">
-        <h3 className="text-lg font-bold mb-2">Comments</h3>
-        {comments.length > 0 ? (
-          <div className="space-y-4">
-            {comments
-              .slice()
-              .map((comment) => (
-                <div key={comment.id} className="bg-gray-50 p-4 rounded-lg relative">
-                  <Link to={`/users/${comment.user_id}`}>
-                    <p className="font-medium text-blue-700">{comment.username || "Anonymous"}</p>
-                  </Link>
-                  <p>{comment.content}</p>
-                  <p className="text-sm text-gray-500">
-                    {new Date(comment.created_at).toLocaleDateString()}
-                  </p>
-                  {currentUser && currentUser.username === comment.username && (
-                    <div className="absolute top-2 right-2 flex space-x-2">
-                      <button 
-                        onClick={() => handleEditComment(comment)}
-                        className="text-blue-500 hover:text-blue-700"
-                      >
-                        <EditIcon fontSize="small" />
-                      </button>
-                      <button 
-                        onClick={() => handleDeleteComment(comment.id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))}
-          </div>
-        ) : (
-          <p>No comments yet.</p>
-        )}
-      </div>
+        </button>
+
+{/* Render comment modals */}
+{isCommentModalOpen &&
+  ReactDOM.createPortal(
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      {editingCommentId ? (
+        <EditRecipeComment
+          onClose={handleCloseCommentModal}
+          onCommentSubmit={handleCommentSubmit}
+          commentToEdit={comments.find((comment) => comment.id === editingCommentId)}
+        />
+      ) : (
+        <CreateRecipeComment
+          onClose={handleCloseCommentModal}
+          onCommentSubmit={handleCommentSubmit}
+        />
+      )}
+    </div>,
+    document.body
+  )}
+
+<div className="mt-4">
+  <h3 className="text-lg font-bold mb-2">Comments</h3>
+  {comments.length > 0 ? (
+    <div className="space-y-4">
+      {comments.map((comment) => (
+        <div key={comment.id} className="bg-gray-50 p-4 rounded-lg relative">
+          <Link to={`/users/${comment.user_id}`}>
+            <p className="font-medium text-blue-700">{comment.username || "Anonymous"}</p>
+          </Link>
+          <p>{comment.content}</p>
+          <p className="text-sm text-gray-500">
+            {new Date(comment.created_at).toLocaleDateString()}
+          </p>
+          {currentUser && currentUser.username === comment.username && (
+            <div className="absolute top-2 right-2 flex space-x-2">
+              <button
+                onClick={() => handleEditComment(comment)}
+                className="text-blue-500 hover:text-blue-700"
+              >
+                <EditIcon fontSize="small" />
+              </button>
+              <button
+                onClick={() => handleDeleteComment(comment.id)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <DeleteIcon fontSize="small" />
+              </button>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
-  );
+  ) : (
+    <p>No comments yet.</p>
+  )}
+</div>
+</div>
+);
 }
