@@ -79,11 +79,19 @@ export function ProfilePage({ setIsLoggedIn }) {
         {/* Profile Picture */}
         <div className="p-2 bg-white rounded-full shadow-lg border border-red-600 border-y-4">
           <div className="w-36 h-36 rounded-full overflow-hidden">
+          <button
+            onClick={handleEditProfileClick}
+            onMouseEnter={handleMouseEditEnter}
+            onMouseLeave={handleMouseEditLeave}
+            className="text-gray-500 hover:text-gray-800 transition"
+            aria-label="Edit profile"
+          >
             <img
               src={`http://localhost:3000${user.profile_pic_url}`}
               alt={`${user.username} profile`}
               className="object-cover w-full h-full"
             />
+          </button>
           </div>
         </div>
 

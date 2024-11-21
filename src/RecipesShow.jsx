@@ -53,7 +53,7 @@ export function RecipesShow() {
   const handleDeleteComment = async (commentId) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
       try {
-        await axios.delete(`http://localhost:3000/comments/${commentId}.json`);
+        await axios.patch(`http://localhost:3000/recipe_box/${commentId}.json`);
         fetchComments();
       } catch (error) {
         console.error("Error deleting comment:", error);
